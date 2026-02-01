@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notre Histoire</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary: #e84393;
+        --bg: #ffeaa7;
+        --card-bg: #ffffff;
+        --text: #2d3436;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Montserrat", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      header {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        /* IMAGE DE FOND ICI (J'ai mis une image en ligne pour l'exemple) */
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 20px;
+      }
+
+      h1 {
+        font-family: "Dancing Script", cursive;
+        font-size: 3.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .counter-box {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px 40px;
+        border-radius: 50px;
+        color: var(--primary);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+      }
+
+      .days-count {
+        font-size: 2.5rem;
+        font-weight: bold;
+        display: block;
+      }
+
+      .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+
+      .timeline::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        background-color: var(--primary);
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -2px;
+        border-radius: 2px;
+      }
+
+      .container {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease-out;
+      }
+
+      .container.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .left {
+        left: 0;
+      }
+      .right {
+        left: 50%;
+      }
+
+      .container::after {
+        content: "❤️";
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        right: -17px;
+        background-color: var(--bg);
+        border: 4px solid var(--primary);
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .right::after {
+        left: -16px;
+      }
+
+      .content {
+        padding: 20px;
+        background-color: var(--card-bg);
+        position: relative;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* STYLE DES IMAGES */
+      .content img {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: block; /* S'assure que l'image s'affiche bien */
+      }
+
+      .date {
+        color: var(--primary);
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      @media screen and (max-width: 600px) {
+        .timeline::after {
+          left: 31px;
+        }
+        .container {
+          width: 100%;
+          padding-left: 70px;
+          padding-right: 25px;
+        }
+        .container::after {
+          left: 15px;
+        }
+        .left::after,
+        .right::after {
+          left: 15px;
+        }
+        .right {
+          left: 0%;
+        }
+        h1 {
+          font-size: 2.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Toi & Moi</h1>
+      <p>Une histoire qui ne fait que commencer</p>
+      <div class="counter-box">
+        <span id="days" class="days-count">0</span>
+        jours d'amour
+      </div>
+    </header>
+
+    <div class="timeline">
+      <div class="container left">
+        <div class="content">
+          <span class="date">14 Février 2024</span>
+          <h2>Notre Rencontre</h2>
+          <p>Le jour où tout a changé.</p>
+          <img
+            src="images/screencapture-pastel-diplomatie-gouv-fr-etudesenfrance-dyn-protected-etudiant-ET-PAN-initDossierFormations-html-2026-01-23-12_26_47.png"
+            alt="Rencontre"
+          />
+        </div>
+      </div>
+
+      <div class="container right">
+        <div class="content">
+          <span class="date">Avril 2024</span>
+          <h2>Premier Voyage</h2>
+          <p>Ce week-end inoubliable.</p>
+          <img
+            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+            alt="Voyage"
+          />
+        </div>
+      </div>
+
+      <div class="container left">
+        <div class="content">
+          <span class="date">Aujourd'hui</span>
+          <h2>Saint Valentin 2026</h2>
+          <p>Je t'aime plus qu'hier.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const startDate = new Date("2024-02-14");
+      function updateCounter() {
+        const now = new Date();
+        const diff = now - startDate;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById("days").innerText = days;
+      }
+      updateCounter();
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll(".container").forEach((el) => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>
