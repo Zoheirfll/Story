@@ -3,15 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notre Histoire</title>
+    <title>Notre Histoire - Ultimate Edition</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
 
     <style>
       :root {
         --primary: #e84393;
+        --secondary: #6c5ce7;
         --bg: #ffeaa7;
         --card-bg: #ffffff;
         --text: #2d3436;
@@ -25,6 +38,18 @@
         overflow-x: hidden;
       }
 
+      /* CANVAS PLUIE DE COEURS */
+      #heart-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Derrière tout le reste */
+        pointer-events: none;
+      }
+
+      /* HEADER AMÉLIORÉ */
       header {
         height: 100vh;
         display: flex;
@@ -32,22 +57,62 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        /* IMAGE DE FOND */
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
           url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
         background-size: cover;
         background-position: center;
         color: white;
         padding: 20px;
+        position: relative;
       }
 
       h1 {
         font-family: "Dancing Script", cursive;
-        font-size: 3.5rem;
+        font-size: 4rem;
         margin-bottom: 10px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: fadeInDown 1.5s ease-out;
       }
 
+      /* LECTEUR MUSIQUE FLOTTANT */
+      .music-player {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 50px;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .music-player:hover {
+        transform: scale(1.05);
+      }
+      .music-icon {
+        font-size: 24px;
+        margin-right: 10px;
+      }
+
+      /* MAP CONTAINER */
+      #map-section {
+        padding: 40px 20px;
+        text-align: center;
+      }
+      #map {
+        height: 400px;
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 4px solid white;
+      }
+
+      /* TIMELINE & RESTE DU CSS (Inchangé) */
       .counter-box {
         background: rgba(255, 255, 255, 0.9);
         padding: 20px 40px;
@@ -56,20 +121,17 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         margin-top: 20px;
       }
-
       .days-count {
         font-size: 2.5rem;
         font-weight: bold;
         display: block;
       }
-
       .timeline {
         position: relative;
         max-width: 800px;
         margin: 50px auto;
         padding: 20px;
       }
-
       .timeline::after {
         content: "";
         position: absolute;
@@ -81,7 +143,6 @@
         margin-left: -2px;
         border-radius: 2px;
       }
-
       .container {
         padding: 10px 40px;
         position: relative;
@@ -92,7 +153,6 @@
         transform: translateY(50px);
         transition: all 0.8s ease-out;
       }
-
       .container.visible {
         opacity: 1;
         transform: translateY(0);
@@ -103,7 +163,6 @@
       .right {
         left: 50%;
       }
-
       .container::after {
         content: "❤️";
         position: absolute;
@@ -120,11 +179,9 @@
         align-items: center;
         justify-content: center;
       }
-
       .right::after {
         left: -16px;
       }
-
       .content {
         padding: 20px;
         background-color: var(--card-bg);
@@ -132,16 +189,12 @@
         border-radius: 15px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       }
-
-      /* STYLE DES IMAGES */
       .content img {
         width: 100%;
         border-radius: 10px;
         margin-top: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: block;
       }
-
       .date {
         color: var(--primary);
         font-weight: bold;
@@ -150,7 +203,7 @@
         display: block;
       }
 
-      /* --- STYLES DU JEU (QUIZ) --- */
+      /* JEU CSS */
       .game-trigger {
         position: fixed;
         bottom: 20px;
@@ -168,7 +221,6 @@
         border: none;
         font-size: 1.1rem;
       }
-
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -180,9 +232,8 @@
           transform: scale(1);
         }
       }
-
       .game-modal {
-        display: none; /* Caché par défaut */
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -196,7 +247,6 @@
         text-align: center;
         color: white;
       }
-
       .game-content {
         background: white;
         color: var(--text);
@@ -206,7 +256,6 @@
         width: 400px;
         position: relative;
       }
-
       .btn-answer {
         display: block;
         width: 100%;
@@ -222,12 +271,10 @@
         font-weight: 600;
         color: var(--text);
       }
-
       .btn-answer:hover {
         background: var(--primary);
         color: white;
       }
-
       .close-game {
         position: absolute;
         top: 10px;
@@ -263,6 +310,19 @@
     </style>
   </head>
   <body>
+    <canvas id="heart-canvas"></canvas>
+
+    <div class="music-player" onclick="toggleMusic()">
+      <span class="music-icon">🎵</span>
+      <span id="music-text">Play Music</span>
+      <audio id="bg-music" loop>
+        <source
+          src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
+    </div>
+
     <header>
       <h1>Toi & Moi</h1>
       <p>Une histoire qui ne fait que commencer</p>
@@ -271,6 +331,20 @@
         jours d'amour
       </div>
     </header>
+
+    <div id="map-section">
+      <h2
+        style="
+          color: var(--primary);
+          font-family: 'Dancing Script', cursive;
+          font-size: 2.5rem;
+        "
+      >
+        Nos Lieux Magiques
+      </h2>
+      <p>De notre rencontre à nos projets...</p>
+      <div id="map"></div>
+    </div>
 
     <div class="timeline">
       <div class="container left">
@@ -289,7 +363,7 @@
         <div class="content">
           <span class="date">Avril 2024</span>
           <h2>Premier Voyage</h2>
-          <p>Ce week-end inoubliable.</p>
+          <p>Ce week-end inoubliable à Oran.</p>
           <img
             src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             alt="Voyage"
@@ -306,10 +380,7 @@
       </div>
     </div>
 
-    <button class="game-trigger" onclick="openGame()">
-      🎮 Jouer au Quiz de l'Amour
-    </button>
-
+    <button class="game-trigger" onclick="openGame()">🎮 Jouer au Quiz</button>
     <div id="gameModal" class="game-modal">
       <div class="game-content">
         <span class="close-game" onclick="closeGame()">&times;</span>
@@ -320,7 +391,7 @@
     </div>
 
     <script>
-      // --- PARTIE COMPTEUR & TIMELINE ---
+      // --- 1. COMPTEUR ---
       const startDate = new Date("2024-02-14");
       function updateCounter() {
         const now = new Date();
@@ -330,29 +401,90 @@
       }
       updateCounter();
 
+      // --- 2. MAP (LEAFLET) - LA SURPRISE ---
+      // Centré sur Oran (35.69, -0.63)
+      var map = L.map("map").setView([35.697654, -0.633737], 13);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Ajoute tes marqueurs ici !
+      var heartIcon = L.divIcon({
+        className: "custom-div-icon",
+        html: "<div style='font-size:30px;'>💖</div>",
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+      });
+
+      L.marker([35.697654, -0.633737], { icon: heartIcon })
+        .addTo(map)
+        .bindPopup("<b>Oran</b><br>Notre premier voyage !")
+        .openPopup();
+
+      // --- 3. MUSIQUE ---
+      function toggleMusic() {
+        var audio = document.getElementById("bg-music");
+        var txt = document.getElementById("music-text");
+        if (audio.paused) {
+          audio.play();
+          txt.innerText = "Pause Music";
+        } else {
+          audio.pause();
+          txt.innerText = "Play Music";
+        }
+      }
+
+      // --- 4. ANIMATION PLUIE DE COEURS (CANVAS) ---
+      const canvas = document.getElementById("heart-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let hearts = [];
+      function createHeart() {
+        return {
+          x: Math.random() * canvas.width,
+          y: canvas.height + Math.random() * 100, // Commence en bas
+          size: Math.random() * 20 + 10,
+          speed: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.3,
+        };
+      }
+      for (let i = 0; i < 30; i++) hearts.push(createHeart());
+
+      function drawHearts() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hearts.forEach((h, i) => {
+          ctx.globalAlpha = h.opacity;
+          ctx.font = h.size + "px Arial";
+          ctx.fillText("❤️", h.x, h.y);
+          h.y -= h.speed; // Monte vers le haut
+          if (h.y < -50) hearts[i] = createHeart(); // Reset
+        });
+        requestAnimationFrame(drawHearts);
+      }
+      drawHearts();
+
+      // --- 5. SCROLL OBSERVER ---
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("visible");
-            }
+            if (entry.isIntersecting) entry.target.classList.add("visible");
           });
         },
         { threshold: 0.1 }
       );
+      document
+        .querySelectorAll(".container")
+        .forEach((el) => observer.observe(el));
 
-      document.querySelectorAll(".container").forEach((el) => {
-        observer.observe(el);
-      });
-
-      // --- PARTIE JEU (QUIZ) ---
-
-      // >>> PERSONNALISE TES QUESTIONS ICI <<<
+      // --- 6. LE JEU (QUIZ TROLL) ---
       const questions = [
         {
           text: "Où avons-nous échangé notre premier baiser ?",
           answers: [
-            { text: "Dans la voiture", correct: true }, // Mets 'true' pour la bonne réponse
+            { text: "Dans la voiture", correct: true },
             { text: "Au cinéma", correct: false },
             { text: "Sur Mars", correct: false },
           ],
@@ -367,82 +499,64 @@
           ],
           wrongMessage: "Tu me connais si mal... 😭",
         },
-        // LA QUESTION TROLL (Celle qui fuit)
         {
           text: "Qui a toujours raison ?",
           isTroll: true,
           answers: [
-            { text: "Toi bien sûr ❤️", correct: true },
-            { text: "Moi (Zoheir)", correct: false }, // Ce bouton va s'enfuir !
+            { text: "Toi ❤️", correct: true },
+            { text: "Moi", correct: false },
           ],
         },
       ];
-
       let currentQuestion = 0;
-
       function openGame() {
         document.getElementById("gameModal").style.display = "flex";
         loadQuestion();
       }
-
       function closeGame() {
         document.getElementById("gameModal").style.display = "none";
         currentQuestion = 0;
       }
-
       function loadQuestion() {
         const q = questions[currentQuestion];
-        const textField = document.getElementById("question-text");
-        const answersDiv = document.getElementById("answers-area");
-        const feedback = document.getElementById("feedback");
-
-        textField.innerText = q.text;
-        answersDiv.innerHTML = "";
-        feedback.innerText = "";
-
+        document.getElementById("question-text").innerText = q.text;
+        const div = document.getElementById("answers-area");
+        div.innerHTML = "";
+        document.getElementById("feedback").innerText = "";
         q.answers.forEach((ans) => {
           const btn = document.createElement("button");
           btn.innerText = ans.text;
           btn.classList.add("btn-answer");
-
-          // Logique du bouton qui fuit
           if (q.isTroll && ans.correct === false) {
             btn.onmouseover = function () {
-              const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-              const y = Math.random() * (window.innerHeight - btn.offsetHeight);
               btn.style.position = "fixed";
-              btn.style.left = x + "px";
-              btn.style.top = y + "px";
-              btn.style.zIndex = "3000"; // S'assure qu'il passe au dessus de tout
+              btn.style.left =
+                Math.random() * (window.innerWidth - btn.offsetWidth) + "px";
+              btn.style.top =
+                Math.random() * (window.innerHeight - btn.offsetHeight) + "px";
+              btn.style.zIndex = "3000";
             };
-            // Fallback pour mobile (au touché)
             btn.ontouchstart = btn.onmouseover;
           }
-
           btn.onclick = () => {
             if (ans.correct) {
-              feedback.style.color = "green";
-              feedback.innerText = "Bravo ! 🎉";
+              document.getElementById("feedback").innerText = "Bravo !";
               setTimeout(nextQuestion, 1000);
             } else {
-              feedback.style.color = "red";
-              feedback.innerText = q.wrongMessage || "Faux ! Essaie encore.";
+              document.getElementById("feedback").innerText =
+                q.wrongMessage || "Faux !";
             }
           };
-          answersDiv.appendChild(btn);
+          div.appendChild(btn);
         });
       }
-
       function nextQuestion() {
         currentQuestion++;
-        if (currentQuestion < questions.length) {
-          loadQuestion();
-        } else {
-          // FIN DU JEU
-          document.getElementById("question-text").innerText =
-            "Tu as gagné ! ❤️";
+        if (currentQuestion < questions.length) loadQuestion();
+        else {
+          document.getElementById("question-text").innerText = "Gagné ! ❤️";
           document.getElementById("answers-area").innerHTML =
-            "<h3>Mon cadeau pour toi :</h3><p>Un gros bisou !</p>";
+            "<h3>Cadeau :</h3><p>Bisous !</p>";
         }
       }
     </script>
