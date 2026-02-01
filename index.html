@@ -33,7 +33,7 @@
         overflow-x: hidden;
       }
 
-      /* CANVAS PLUIE DE COEURS (ARRIÈRE PLAN) */
+      /* CANVAS PLUIE DE COEURS */
       #heart-canvas {
         position: fixed;
         top: 0;
@@ -52,7 +52,6 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        /* IMAGE COVER */
         background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
           url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
         background-size: cover;
@@ -80,7 +79,6 @@
         }
       }
 
-      /* COMPTEUR */
       .counter-box {
         background: rgba(255, 255, 255, 0.9);
         padding: 20px 40px;
@@ -95,7 +93,6 @@
         display: block;
       }
 
-      /* LECTEUR MUSIQUE */
       .music-player {
         position: fixed;
         top: 20px;
@@ -112,7 +109,6 @@
         font-weight: bold;
       }
 
-      /* TIMELINE */
       .timeline {
         position: relative;
         max-width: 800px;
@@ -180,7 +176,6 @@
         margin-top: 10px;
       }
 
-      /* TYPEWRITER LETTER (NOUVEAU) */
       .letter-section {
         max-width: 700px;
         margin: 80px auto;
@@ -231,7 +226,6 @@
         }
       }
 
-      /* JEU & GRATTAGE (NOUVEAU) */
       .game-trigger {
         position: fixed;
         bottom: 20px;
@@ -271,13 +265,13 @@
         position: relative;
       }
 
-      /* Styles Carte à Gratter */
+      /* --- CORRECTION CSS ICI --- */
       #scratch-container {
         position: relative;
         width: 300px;
         height: 150px;
         margin: 20px auto;
-        display: none;
+        /* J'ai enlevé le display: none; qui bloquait tout */
         user-select: none;
       }
       #scratch-canvas {
@@ -303,7 +297,6 @@
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
       }
 
-      /* MAP */
       #map {
         height: 350px;
         width: 100%;
@@ -313,7 +306,6 @@
         border: 4px solid white;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       }
-
       .btn-answer {
         width: 100%;
         padding: 15px;
@@ -431,6 +423,7 @@
       <span class="cursor"></span>
     </div>
     <div style="height: 100px"></div>
+
     <button class="game-trigger" onclick="openGame()">
       🎁 Ouvre ton cadeau
     </button>
@@ -453,6 +446,7 @@
             Bravo ! 🎉
           </h2>
           <p>Gratte la carte ci-dessous pour découvrir ton cadeau :</p>
+
           <div id="scratch-container">
             <div id="secret-prize">Bon pour un Massage ❤️</div>
             <canvas id="scratch-canvas" width="300" height="150"></canvas>
@@ -462,19 +456,15 @@
     </div>
 
     <script>
-      // --- CONFIGURATION ---
       const startDate = new Date("2024-02-14");
-      // Le texte de ta lettre d'amour (Tu peux utiliser \n pour sauter des lignes)
       const letterText =
         "Ma chérie,\n\nDepuis que tu es entrée dans ma vie, tout a pris des couleurs que je ne connaissais pas. \nChaque jour passé avec toi est un cadeau. \n\nJe t'ai fait ce petit site pour te rappeler à quel point tu es unique.\n\nJe t'aime.\n\n- Ton Zoheir";
 
-      // 1. COMPTEUR
       const diff = new Date() - startDate;
       document.getElementById("days").innerText = Math.floor(
         diff / (1000 * 60 * 60 * 24)
       );
 
-      // 2. MAP (Oran)
       var map = L.map("map").setView([35.697654, -0.633737], 13);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap",
@@ -484,7 +474,6 @@
         .bindPopup("💖 Oran")
         .openPopup();
 
-      // 3. TYPEWRITER (Lettre qui s'écrit seule)
       const typeWriterElement = document.getElementById("typewriter");
       let i = 0;
       function typeWriter() {
@@ -492,10 +481,9 @@
           const char = letterText.charAt(i);
           typeWriterElement.innerHTML += char === "\n" ? "<br>" : char;
           i++;
-          setTimeout(typeWriter, 50); // Vitesse de frappe (50ms)
+          setTimeout(typeWriter, 50);
         }
       }
-      // Déclenche l'écriture quand on scrolle dessus
       const letterObserver = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && i === 0) typeWriter();
@@ -504,7 +492,6 @@
       );
       letterObserver.observe(document.querySelector(".letter-section"));
 
-      // 4. ANIMATION SCROLL
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -517,7 +504,6 @@
         .querySelectorAll(".container")
         .forEach((el) => observer.observe(el));
 
-      // 5. JEU & GRATTAGE
       const questions = [
         {
           text: "Notre premier resto ?",
@@ -590,19 +576,18 @@
         document.getElementById("quiz-section").style.display = "none";
         document.getElementById("scratch-section").style.display = "block";
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        // On s'assure que le conteneur est visible avant d'initier le canvas
+        document.getElementById("scratch-container").style.display = "block";
         initScratchCard();
       }
 
-      // 6. LOGIQUE CARTE À GRATTER
       function initScratchCard() {
         const canvas = document.getElementById("scratch-canvas");
         const ctx = canvas.getContext("2d");
 
-        // Remplit le canvas en gris argenté
         ctx.fillStyle = "#b2bec3";
         ctx.fillRect(0, 0, 300, 150);
 
-        // Texte "GRATTEZ-MOI"
         ctx.fillStyle = "#636e72";
         ctx.font = "20px Montserrat";
         ctx.fillText("✨ Grattez ici ✨", 85, 80);
@@ -611,15 +596,24 @@
 
         function getMousePos(canvas, evt) {
           var rect = canvas.getBoundingClientRect();
+          var clientX = evt.clientX;
+          var clientY = evt.clientY;
+
+          // Support Mobile (Touch)
+          if (evt.touches && evt.touches.length > 0) {
+            clientX = evt.touches[0].clientX;
+            clientY = evt.touches[0].clientY;
+          }
+
           return {
-            x: (evt.clientX || evt.touches[0].clientX) - rect.left,
-            y: (evt.clientY || evt.touches[0].clientY) - rect.top,
+            x: clientX - rect.left,
+            y: clientY - rect.top,
           };
         }
 
         function scratch(e) {
           if (!isDrawing) return;
-          e.preventDefault(); // Empêche le scroll sur mobile
+          e.preventDefault();
           const pos = getMousePos(canvas, e);
           ctx.globalCompositeOperation = "destination-out";
           ctx.beginPath();
@@ -635,7 +629,6 @@
         canvas.addEventListener("touchmove", scratch);
       }
 
-      // 7. ARRIÈRE PLAN PLUIE
       const canvas = document.getElementById("heart-canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = window.innerWidth;
@@ -660,7 +653,6 @@
       ctx.font = "20px Arial";
       drawHearts();
 
-      // MUSIQUE
       function toggleMusic() {
         const audio = document.getElementById("bg-music");
         audio.paused
