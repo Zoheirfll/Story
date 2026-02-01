@@ -9,6 +9,11 @@
     <title>Pour Toi ❤️</title>
 
     <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>"
+    />
+
+    <link
       href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&family=Courier+Prime&family=Orbitron:wght@500&display=swap"
       rel="stylesheet"
     />
@@ -201,6 +206,36 @@
         100% {
           top: 100%;
         }
+      }
+
+      /* 2. STYLE GALERIE POLAROID (NOUVEAU) */
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 20px;
+      }
+      .polaroid {
+        background: white;
+        padding: 10px 10px 35px 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: rotate(-2deg);
+        transition: 0.3s;
+        width: 130px;
+      }
+      .polaroid img {
+        width: 100%;
+        border-radius: 2px;
+      }
+      .polaroid:nth-child(even) {
+        transform: rotate(3deg);
+        margin-top: 10px;
+      }
+      .polaroid:hover {
+        transform: scale(1.2) rotate(0deg) !important;
+        z-index: 10;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       }
 
       /* TYPEWRITER LETTER */
@@ -494,6 +529,32 @@
         </p>
       </div>
 
+      <div class="glass-card">
+        <h3 style="text-align: center; color: var(--primary)">
+          Nos instants volés 📸
+        </h3>
+        <div class="gallery">
+          <div class="polaroid">
+            <img
+              src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400"
+              alt="Souvenir 1"
+            />
+          </div>
+          <div class="polaroid">
+            <img
+              src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400"
+              alt="Souvenir 2"
+            />
+          </div>
+          <div class="polaroid">
+            <img
+              src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400"
+              alt="Souvenir 3"
+            />
+          </div>
+        </div>
+      </div>
+
       <div class="glass-card letter-section">
         <div id="typewriter"></div>
         <span class="cursor"></span>
@@ -515,7 +576,6 @@
     <div id="gameModal" class="game-modal">
       <div class="game-content">
         <span class="close-game" onclick="closeGame()">&times;</span>
-
         <div id="quiz-section">
           <h2 id="question-text" style="color: var(--primary)">Prête ?</h2>
           <div id="answers-area"></div>
@@ -524,7 +584,6 @@
             style="font-weight: bold; margin-top: 15px; height: 20px"
           ></p>
         </div>
-
         <div id="scratch-section" style="display: none">
           <h2 style="color: var(--primary); font-family: 'Dancing Script'">
             C'est gagné ! 🎉
@@ -574,7 +633,6 @@
       document.getElementById("counter").innerText =
         Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24)) +
         " Jours";
-
       var map = L.map("map").setView([35.697654, -0.633737], 13);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
         map
@@ -596,8 +654,12 @@
         pin = "";
         disp.innerText = "****";
       }
+
       function checkPin() {
         if (pin === SECRET_CODE) {
+          // 4. AUTO-PLAY MUSIQUE (AJOUT ICI)
+          document.getElementById("bg-music").play();
+
           confetti();
           document.getElementById("vault-section").style.display = "none";
           const locked = document.getElementById("locked-content");
@@ -615,15 +677,10 @@
 
       /* --- 3. UNLOCK SEQUENCE --- */
       function runUnlockSequence() {
-        // AI
         const st = document.getElementById("ai-status");
         setTimeout(() => (st.innerText = "Scan Rétinien..."), 1000);
         setTimeout(() => (st.innerText = "Accès Autorisé ✅"), 2500);
-
-        // Letter
         setTimeout(typeWriter, 3000);
-
-        // Chat
         setTimeout(startChat, 4000);
       }
 
@@ -678,7 +735,6 @@
         const area = document.getElementById("answers-area");
         area.innerHTML = "";
         document.getElementById("feedback").innerText = "";
-
         q.a.forEach((ans) => {
           const b = document.createElement("button");
           b.className = "btn-answer";
@@ -723,7 +779,6 @@
         ctx.fillStyle = "#636e72";
         ctx.font = "20px Montserrat";
         ctx.fillText("Grattez moi ✨", 85, 80);
-
         let draw = false;
         function getPos(e) {
           var r = c.getBoundingClientRect();
