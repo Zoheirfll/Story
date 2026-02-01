@@ -32,7 +32,7 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        /* IMAGE DE FOND ICI (J'ai mis une image en ligne pour l'exemple) */
+        /* IMAGE DE FOND */
         background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
           url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
         background-size: cover;
@@ -139,7 +139,7 @@
         border-radius: 10px;
         margin-top: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        display: block; /* S'assure que l'image s'affiche bien */
+        display: block;
       }
 
       .date {
@@ -148,6 +148,93 @@
         font-size: 0.9rem;
         margin-bottom: 5px;
         display: block;
+      }
+
+      /* --- STYLES DU JEU (QUIZ) --- */
+      .game-trigger {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        font-family: "Montserrat", sans-serif;
+        font-weight: bold;
+        animation: pulse 2s infinite;
+        border: none;
+        font-size: 1.1rem;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .game-modal {
+        display: none; /* Caché par défaut */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        color: white;
+      }
+
+      .game-content {
+        background: white;
+        color: var(--text);
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 90%;
+        width: 400px;
+        position: relative;
+      }
+
+      .btn-answer {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        background: var(--bg);
+        border: 2px solid var(--primary);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.3s;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .btn-answer:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .close-game {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #aaa;
       }
 
       @media screen and (max-width: 600px) {
@@ -219,7 +306,21 @@
       </div>
     </div>
 
+    <button class="game-trigger" onclick="openGame()">
+      🎮 Jouer au Quiz de l'Amour
+    </button>
+
+    <div id="gameModal" class="game-modal">
+      <div class="game-content">
+        <span class="close-game" onclick="closeGame()">&times;</span>
+        <h2 id="question-text" style="color: var(--primary)">Prête ?</h2>
+        <div id="answers-area"></div>
+        <p id="feedback" style="font-weight: bold; margin-top: 15px"></p>
+      </div>
+    </div>
+
     <script>
+      // --- PARTIE COMPTEUR & TIMELINE ---
       const startDate = new Date("2024-02-14");
       function updateCounter() {
         const now = new Date();
@@ -243,6 +344,107 @@
       document.querySelectorAll(".container").forEach((el) => {
         observer.observe(el);
       });
+
+      // --- PARTIE JEU (QUIZ) ---
+
+      // >>> PERSONNALISE TES QUESTIONS ICI <<<
+      const questions = [
+        {
+          text: "Où avons-nous échangé notre premier baiser ?",
+          answers: [
+            { text: "Dans la voiture", correct: true }, // Mets 'true' pour la bonne réponse
+            { text: "Au cinéma", correct: false },
+            { text: "Sur Mars", correct: false },
+          ],
+          wrongMessage: "Euh... tu as bu ? 🍷",
+        },
+        {
+          text: "Quel est mon plat préféré ?",
+          answers: [
+            { text: "La pizza", correct: false },
+            { text: "Le couscous", correct: true },
+            { text: "Les épinards", correct: false },
+          ],
+          wrongMessage: "Tu me connais si mal... 😭",
+        },
+        // LA QUESTION TROLL (Celle qui fuit)
+        {
+          text: "Qui a toujours raison ?",
+          isTroll: true,
+          answers: [
+            { text: "Toi bien sûr ❤️", correct: true },
+            { text: "Moi (Zoheir)", correct: false }, // Ce bouton va s'enfuir !
+          ],
+        },
+      ];
+
+      let currentQuestion = 0;
+
+      function openGame() {
+        document.getElementById("gameModal").style.display = "flex";
+        loadQuestion();
+      }
+
+      function closeGame() {
+        document.getElementById("gameModal").style.display = "none";
+        currentQuestion = 0;
+      }
+
+      function loadQuestion() {
+        const q = questions[currentQuestion];
+        const textField = document.getElementById("question-text");
+        const answersDiv = document.getElementById("answers-area");
+        const feedback = document.getElementById("feedback");
+
+        textField.innerText = q.text;
+        answersDiv.innerHTML = "";
+        feedback.innerText = "";
+
+        q.answers.forEach((ans) => {
+          const btn = document.createElement("button");
+          btn.innerText = ans.text;
+          btn.classList.add("btn-answer");
+
+          // Logique du bouton qui fuit
+          if (q.isTroll && ans.correct === false) {
+            btn.onmouseover = function () {
+              const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+              const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+              btn.style.position = "fixed";
+              btn.style.left = x + "px";
+              btn.style.top = y + "px";
+              btn.style.zIndex = "3000"; // S'assure qu'il passe au dessus de tout
+            };
+            // Fallback pour mobile (au touché)
+            btn.ontouchstart = btn.onmouseover;
+          }
+
+          btn.onclick = () => {
+            if (ans.correct) {
+              feedback.style.color = "green";
+              feedback.innerText = "Bravo ! 🎉";
+              setTimeout(nextQuestion, 1000);
+            } else {
+              feedback.style.color = "red";
+              feedback.innerText = q.wrongMessage || "Faux ! Essaie encore.";
+            }
+          };
+          answersDiv.appendChild(btn);
+        });
+      }
+
+      function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+          loadQuestion();
+        } else {
+          // FIN DU JEU
+          document.getElementById("question-text").innerText =
+            "Tu as gagné ! ❤️";
+          document.getElementById("answers-area").innerHTML =
+            "<h3>Mon cadeau pour toi :</h3><p>Un gros bisou !</p>";
+        }
+      }
     </script>
   </body>
 </html>
