@@ -3,28 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notre Histoire - Ultimate Edition</title>
+    <title>Pour Toi ❤️</title>
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&family=Courier+Prime&display=swap"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
     />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
       :root {
         --primary: #e84393;
-        --secondary: #6c5ce7;
+        --secondary: #a29bfe;
         --bg: #ffeaa7;
         --card-bg: #ffffff;
         --text: #2d3436;
@@ -38,18 +33,18 @@
         overflow-x: hidden;
       }
 
-      /* CANVAS PLUIE DE COEURS */
+      /* CANVAS PLUIE DE COEURS (ARRIÈRE PLAN) */
       #heart-canvas {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1; /* Derrière tout le reste */
+        z-index: -1;
         pointer-events: none;
       }
 
-      /* HEADER AMÉLIORÉ */
+      /* HEADER */
       header {
         height: 100vh;
         display: flex;
@@ -57,13 +52,13 @@
         justify-content: center;
         align-items: center;
         text-align: center;
+        /* IMAGE COVER */
         background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
           url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
         background-size: cover;
         background-position: center;
         color: white;
         padding: 20px;
-        position: relative;
       }
 
       h1 {
@@ -71,48 +66,21 @@
         font-size: 4rem;
         margin-bottom: 10px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        animation: fadeInDown 1.5s ease-out;
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
       }
 
-      /* LECTEUR MUSIQUE FLOTTANT */
-      .music-player {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 10px;
-        border-radius: 50px;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      .music-player:hover {
-        transform: scale(1.05);
-      }
-      .music-icon {
-        font-size: 24px;
-        margin-right: 10px;
-      }
-
-      /* MAP CONTAINER */
-      #map-section {
-        padding: 40px 20px;
-        text-align: center;
-      }
-      #map {
-        height: 400px;
-        width: 100%;
-        max-width: 800px;
-        margin: 20px auto;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        border: 4px solid white;
-      }
-
-      /* TIMELINE & RESTE DU CSS (Inchangé) */
+      /* COMPTEUR */
       .counter-box {
         background: rgba(255, 255, 255, 0.9);
         padding: 20px 40px;
@@ -120,12 +88,31 @@
         color: var(--primary);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         margin-top: 20px;
+        font-weight: bold;
       }
       .days-count {
         font-size: 2.5rem;
-        font-weight: bold;
         display: block;
       }
+
+      /* LECTEUR MUSIQUE */
+      .music-player {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px 15px;
+        border-radius: 50px;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+
+      /* TIMELINE */
       .timeline {
         position: relative;
         max-width: 800px;
@@ -146,7 +133,6 @@
       .container {
         padding: 10px 40px;
         position: relative;
-        background-color: inherit;
         width: 50%;
         box-sizing: border-box;
         opacity: 0;
@@ -185,7 +171,6 @@
       .content {
         padding: 20px;
         background-color: var(--card-bg);
-        position: relative;
         border-radius: 15px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       }
@@ -193,17 +178,60 @@
         width: 100%;
         border-radius: 10px;
         margin-top: 10px;
-        display: block;
-      }
-      .date {
-        color: var(--primary);
-        font-weight: bold;
-        font-size: 0.9rem;
-        margin-bottom: 5px;
-        display: block;
       }
 
-      /* JEU CSS */
+      /* TYPEWRITER LETTER (NOUVEAU) */
+      .letter-section {
+        max-width: 700px;
+        margin: 80px auto;
+        padding: 40px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        font-family: "Courier Prime", monospace;
+        line-height: 1.6;
+        position: relative;
+        transform: rotate(-1deg);
+      }
+      .letter-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: repeating-linear-gradient(
+          45deg,
+          #e84393,
+          #e84393 10px,
+          #fff 10px,
+          #fff 20px
+        );
+      }
+      #typewriter {
+        font-size: 1.1rem;
+        color: #333;
+        min-height: 150px;
+      }
+      .cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.2em;
+        background-color: black;
+        animation: blink 1s infinite;
+        vertical-align: bottom;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* JEU & GRATTAGE (NOUVEAU) */
       .game-trigger {
         position: fixed;
         bottom: 20px;
@@ -215,22 +243,10 @@
         cursor: pointer;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         z-index: 1000;
-        font-family: "Montserrat", sans-serif;
         font-weight: bold;
         animation: pulse 2s infinite;
         border: none;
         font-size: 1.1rem;
-      }
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
       }
       .game-modal {
         display: none;
@@ -239,37 +255,74 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.95);
         z-index: 2000;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        text-align: center;
-        color: white;
       }
       .game-content {
         background: white;
-        color: var(--text);
-        padding: 40px;
+        padding: 30px;
         border-radius: 20px;
-        max-width: 90%;
-        width: 400px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
         position: relative;
       }
+
+      /* Styles Carte à Gratter */
+      #scratch-container {
+        position: relative;
+        width: 300px;
+        height: 150px;
+        margin: 20px auto;
+        display: none;
+        user-select: none;
+      }
+      #scratch-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: crosshair;
+        touch-action: none;
+        border-radius: 10px;
+      }
+      #secret-prize {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #81ecec, #74b9ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Dancing Script", cursive;
+        font-size: 1.8rem;
+        color: white;
+        border-radius: 10px;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      /* MAP */
+      #map {
+        height: 350px;
+        width: 100%;
+        max-width: 800px;
+        margin: 40px auto;
+        border-radius: 20px;
+        border: 4px solid white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
       .btn-answer {
-        display: block;
         width: 100%;
         padding: 15px;
-        margin: 10px 0;
-        background: var(--bg);
+        margin: 8px 0;
+        background: #f1f2f6;
         border: 2px solid var(--primary);
         border-radius: 10px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: 0.3s;
-        font-family: "Montserrat", sans-serif;
         font-weight: 600;
-        color: var(--text);
+        cursor: pointer;
       }
       .btn-answer:hover {
         background: var(--primary);
@@ -277,21 +330,20 @@
       }
       .close-game {
         position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
         cursor: pointer;
-        color: #aaa;
       }
 
       @media screen and (max-width: 600px) {
-        .timeline::after {
-          left: 31px;
+        h1 {
+          font-size: 2.8rem;
         }
         .container {
           width: 100%;
           padding-left: 70px;
-          padding-right: 25px;
+          padding-right: 20px;
         }
         .container::after {
           left: 15px;
@@ -303,8 +355,8 @@
         .right {
           left: 0%;
         }
-        h1 {
-          font-size: 2.5rem;
+        .timeline::after {
+          left: 31px;
         }
       }
     </style>
@@ -313,8 +365,8 @@
     <canvas id="heart-canvas"></canvas>
 
     <div class="music-player" onclick="toggleMusic()">
-      <span class="music-icon">🎵</span>
-      <span id="music-text">Play Music</span>
+      <span style="font-size: 1.2rem; margin-right: 8px">🎵</span>
+      <span id="music-text">Notre Chanson</span>
       <audio id="bg-music" loop>
         <source
           src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
@@ -325,14 +377,14 @@
 
     <header>
       <h1>Toi & Moi</h1>
-      <p>Une histoire qui ne fait que commencer</p>
+      <p style="font-size: 1.2rem; margin-top: 0">Le début de l'éternité</p>
       <div class="counter-box">
         <span id="days" class="days-count">0</span>
-        jours d'amour
+        jours ensemble
       </div>
     </header>
 
-    <div id="map-section">
+    <div style="text-align: center; padding: 20px">
       <h2
         style="
           color: var(--primary);
@@ -340,137 +392,123 @@
           font-size: 2.5rem;
         "
       >
-        Nos Lieux Magiques
+        Nos Lieux
       </h2>
-      <p>De notre rencontre à nos projets...</p>
       <div id="map"></div>
     </div>
 
     <div class="timeline">
       <div class="container left">
         <div class="content">
-          <span class="date">14 Février 2024</span>
-          <h2>Notre Rencontre</h2>
-          <p>Le jour où tout a changé.</p>
+          <span style="color: var(--primary); font-weight: bold"
+            >14 Février 2024</span
+          >
+          <h2>Le Premier Jour</h2>
+          <p>Je ne savais pas encore que ma vie allait changer.</p>
           <img
             src="images/screencapture-pastel-diplomatie-gouv-fr-etudesenfrance-dyn-protected-etudiant-ET-PAN-initDossierFormations-html-2026-01-23-12_26_47.png"
             alt="Rencontre"
           />
         </div>
       </div>
-
       <div class="container right">
         <div class="content">
-          <span class="date">Avril 2024</span>
-          <h2>Premier Voyage</h2>
-          <p>Ce week-end inoubliable à Oran.</p>
+          <span style="color: var(--primary); font-weight: bold"
+            >Avril 2024</span
+          >
+          <h2>Oran la Radieuse</h2>
+          <p>Nos fous rires, la mer, et toi.</p>
           <img
             src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             alt="Voyage"
           />
         </div>
       </div>
+    </div>
 
-      <div class="container left">
-        <div class="content">
-          <span class="date">Aujourd'hui</span>
-          <h2>Saint Valentin 2026</h2>
-          <p>Je t'aime plus qu'hier.</p>
+    <div class="letter-section">
+      <div id="typewriter"></div>
+      <span class="cursor"></span>
+    </div>
+    <div style="height: 100px"></div>
+    <button class="game-trigger" onclick="openGame()">
+      🎁 Ouvre ton cadeau
+    </button>
+
+    <div id="gameModal" class="game-modal">
+      <div class="game-content">
+        <span class="close-game" onclick="closeGame()">&times;</span>
+
+        <div id="quiz-section">
+          <h2 id="question-text" style="color: var(--primary)">Prête ?</h2>
+          <div id="answers-area"></div>
+          <p
+            id="feedback"
+            style="font-weight: bold; margin-top: 10px; min-height: 20px"
+          ></p>
+        </div>
+
+        <div id="scratch-section" style="display: none">
+          <h2 style="color: var(--primary); font-family: 'Dancing Script'">
+            Bravo ! 🎉
+          </h2>
+          <p>Gratte la carte ci-dessous pour découvrir ton cadeau :</p>
+          <div id="scratch-container">
+            <div id="secret-prize">Bon pour un Massage ❤️</div>
+            <canvas id="scratch-canvas" width="300" height="150"></canvas>
+          </div>
         </div>
       </div>
     </div>
 
-    <button class="game-trigger" onclick="openGame()">🎮 Jouer au Quiz</button>
-    <div id="gameModal" class="game-modal">
-      <div class="game-content">
-        <span class="close-game" onclick="closeGame()">&times;</span>
-        <h2 id="question-text" style="color: var(--primary)">Prête ?</h2>
-        <div id="answers-area"></div>
-        <p id="feedback" style="font-weight: bold; margin-top: 15px"></p>
-      </div>
-    </div>
-
     <script>
-      // --- 1. COMPTEUR ---
+      // --- CONFIGURATION ---
       const startDate = new Date("2024-02-14");
-      function updateCounter() {
-        const now = new Date();
-        const diff = now - startDate;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        document.getElementById("days").innerText = days;
-      }
-      updateCounter();
+      // Le texte de ta lettre d'amour (Tu peux utiliser \n pour sauter des lignes)
+      const letterText =
+        "Ma chérie,\n\nDepuis que tu es entrée dans ma vie, tout a pris des couleurs que je ne connaissais pas. \nChaque jour passé avec toi est un cadeau. \n\nJe t'ai fait ce petit site pour te rappeler à quel point tu es unique.\n\nJe t'aime.\n\n- Ton Zoheir";
 
-      // --- 2. MAP (LEAFLET) - LA SURPRISE ---
-      // Centré sur Oran (35.69, -0.63)
+      // 1. COMPTEUR
+      const diff = new Date() - startDate;
+      document.getElementById("days").innerText = Math.floor(
+        diff / (1000 * 60 * 60 * 24)
+      );
+
+      // 2. MAP (Oran)
       var map = L.map("map").setView([35.697654, -0.633737], 13);
-
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
+        attribution: "© OpenStreetMap",
       }).addTo(map);
-
-      // Ajoute tes marqueurs ici !
-      var heartIcon = L.divIcon({
-        className: "custom-div-icon",
-        html: "<div style='font-size:30px;'>💖</div>",
-        iconSize: [30, 42],
-        iconAnchor: [15, 42],
-      });
-
-      L.marker([35.697654, -0.633737], { icon: heartIcon })
+      L.marker([35.697654, -0.633737])
         .addTo(map)
-        .bindPopup("<b>Oran</b><br>Notre premier voyage !")
+        .bindPopup("💖 Oran")
         .openPopup();
 
-      // --- 3. MUSIQUE ---
-      function toggleMusic() {
-        var audio = document.getElementById("bg-music");
-        var txt = document.getElementById("music-text");
-        if (audio.paused) {
-          audio.play();
-          txt.innerText = "Pause Music";
-        } else {
-          audio.pause();
-          txt.innerText = "Play Music";
+      // 3. TYPEWRITER (Lettre qui s'écrit seule)
+      const typeWriterElement = document.getElementById("typewriter");
+      let i = 0;
+      function typeWriter() {
+        if (i < letterText.length) {
+          const char = letterText.charAt(i);
+          typeWriterElement.innerHTML += char === "\n" ? "<br>" : char;
+          i++;
+          setTimeout(typeWriter, 50); // Vitesse de frappe (50ms)
         }
       }
+      // Déclenche l'écriture quand on scrolle dessus
+      const letterObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && i === 0) typeWriter();
+        },
+        { threshold: 0.5 }
+      );
+      letterObserver.observe(document.querySelector(".letter-section"));
 
-      // --- 4. ANIMATION PLUIE DE COEURS (CANVAS) ---
-      const canvas = document.getElementById("heart-canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      let hearts = [];
-      function createHeart() {
-        return {
-          x: Math.random() * canvas.width,
-          y: canvas.height + Math.random() * 100, // Commence en bas
-          size: Math.random() * 20 + 10,
-          speed: Math.random() * 2 + 1,
-          opacity: Math.random() * 0.5 + 0.3,
-        };
-      }
-      for (let i = 0; i < 30; i++) hearts.push(createHeart());
-
-      function drawHearts() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        hearts.forEach((h, i) => {
-          ctx.globalAlpha = h.opacity;
-          ctx.font = h.size + "px Arial";
-          ctx.fillText("❤️", h.x, h.y);
-          h.y -= h.speed; // Monte vers le haut
-          if (h.y < -50) hearts[i] = createHeart(); // Reset
-        });
-        requestAnimationFrame(drawHearts);
-      }
-      drawHearts();
-
-      // --- 5. SCROLL OBSERVER ---
+      // 4. ANIMATION SCROLL
       const observer = new IntersectionObserver(
         (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
           });
         },
         { threshold: 0.1 }
@@ -479,85 +517,158 @@
         .querySelectorAll(".container")
         .forEach((el) => observer.observe(el));
 
-      // --- 6. LE JEU (QUIZ TROLL) ---
+      // 5. JEU & GRATTAGE
       const questions = [
         {
-          text: "Où avons-nous échangé notre premier baiser ?",
+          text: "Notre premier resto ?",
           answers: [
-            { text: "Dans la voiture", correct: true },
-            { text: "Au cinéma", correct: false },
-            { text: "Sur Mars", correct: false },
+            { text: "Pizzeria", correct: false },
+            { text: "Sushi", correct: false },
+            { text: "Ce truc bizarre à Oran", correct: true },
           ],
-          wrongMessage: "Euh... tu as bu ? 🍷",
+          wrong: "Menteuse ! 😂",
         },
         {
-          text: "Quel est mon plat préféré ?",
-          answers: [
-            { text: "La pizza", correct: false },
-            { text: "Le couscous", correct: true },
-            { text: "Les épinards", correct: false },
-          ],
-          wrongMessage: "Tu me connais si mal... 😭",
-        },
-        {
-          text: "Qui a toujours raison ?",
+          text: "Qui t'aime le plus ?",
           isTroll: true,
           answers: [
-            { text: "Toi ❤️", correct: true },
-            { text: "Moi", correct: false },
+            { text: "Zoheir ❤️", correct: true },
+            { text: "Brad Pitt", correct: false },
           ],
         },
       ];
-      let currentQuestion = 0;
+      let currentQ = 0;
+
       function openGame() {
         document.getElementById("gameModal").style.display = "flex";
         loadQuestion();
       }
       function closeGame() {
         document.getElementById("gameModal").style.display = "none";
-        currentQuestion = 0;
       }
+
       function loadQuestion() {
-        const q = questions[currentQuestion];
+        if (currentQ >= questions.length) {
+          showScratchCard();
+          return;
+        }
+        const q = questions[currentQ];
         document.getElementById("question-text").innerText = q.text;
         const div = document.getElementById("answers-area");
         div.innerHTML = "";
         document.getElementById("feedback").innerText = "";
+
         q.answers.forEach((ans) => {
           const btn = document.createElement("button");
           btn.innerText = ans.text;
           btn.classList.add("btn-answer");
-          if (q.isTroll && ans.correct === false) {
+          if (q.isTroll && !ans.correct) {
             btn.onmouseover = function () {
               btn.style.position = "fixed";
-              btn.style.left =
-                Math.random() * (window.innerWidth - btn.offsetWidth) + "px";
-              btn.style.top =
-                Math.random() * (window.innerHeight - btn.offsetHeight) + "px";
-              btn.style.zIndex = "3000";
+              btn.style.left = Math.random() * 80 + "%";
+              btn.style.top = Math.random() * 80 + "%";
             };
             btn.ontouchstart = btn.onmouseover;
           }
           btn.onclick = () => {
             if (ans.correct) {
-              document.getElementById("feedback").innerText = "Bravo !";
-              setTimeout(nextQuestion, 1000);
+              document.getElementById("feedback").innerText = "Correct ! ❤️";
+              document.getElementById("feedback").style.color = "green";
+              currentQ++;
+              setTimeout(loadQuestion, 800);
             } else {
               document.getElementById("feedback").innerText =
-                q.wrongMessage || "Faux !";
+                q.wrong || "Faux !";
+              document.getElementById("feedback").style.color = "red";
             }
           };
           div.appendChild(btn);
         });
       }
-      function nextQuestion() {
-        currentQuestion++;
-        if (currentQuestion < questions.length) loadQuestion();
-        else {
-          document.getElementById("question-text").innerText = "Gagné ! ❤️";
-          document.getElementById("answers-area").innerHTML =
-            "<h3>Cadeau :</h3><p>Bisous !</p>";
+
+      function showScratchCard() {
+        document.getElementById("quiz-section").style.display = "none";
+        document.getElementById("scratch-section").style.display = "block";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        initScratchCard();
+      }
+
+      // 6. LOGIQUE CARTE À GRATTER
+      function initScratchCard() {
+        const canvas = document.getElementById("scratch-canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Remplit le canvas en gris argenté
+        ctx.fillStyle = "#b2bec3";
+        ctx.fillRect(0, 0, 300, 150);
+
+        // Texte "GRATTEZ-MOI"
+        ctx.fillStyle = "#636e72";
+        ctx.font = "20px Montserrat";
+        ctx.fillText("✨ Grattez ici ✨", 85, 80);
+
+        let isDrawing = false;
+
+        function getMousePos(canvas, evt) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: (evt.clientX || evt.touches[0].clientX) - rect.left,
+            y: (evt.clientY || evt.touches[0].clientY) - rect.top,
+          };
         }
+
+        function scratch(e) {
+          if (!isDrawing) return;
+          e.preventDefault(); // Empêche le scroll sur mobile
+          const pos = getMousePos(canvas, e);
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        canvas.addEventListener("mousedown", () => (isDrawing = true));
+        canvas.addEventListener("touchstart", () => (isDrawing = true));
+        canvas.addEventListener("mouseup", () => (isDrawing = false));
+        canvas.addEventListener("touchend", () => (isDrawing = false));
+        canvas.addEventListener("mousemove", scratch);
+        canvas.addEventListener("touchmove", scratch);
+      }
+
+      // 7. ARRIÈRE PLAN PLUIE
+      const canvas = document.getElementById("heart-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let hearts = [];
+      for (let i = 0; i < 30; i++)
+        hearts.push({
+          x: Math.random() * canvas.width,
+          y: canvas.height + Math.random() * 100,
+          s: Math.random() * 20 + 10,
+          sp: Math.random() * 2 + 1,
+        });
+      function drawHearts() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hearts.forEach((h) => {
+          ctx.fillText("❤️", h.x, h.y);
+          h.y -= h.sp;
+          if (h.y < -50) h.y = canvas.height + 10;
+        });
+        requestAnimationFrame(drawHearts);
+      }
+      ctx.font = "20px Arial";
+      drawHearts();
+
+      // MUSIQUE
+      function toggleMusic() {
+        const audio = document.getElementById("bg-music");
+        audio.paused
+          ? (audio.play(),
+            (document.getElementById("music-text").innerText = "En pause"))
+          : (audio.pause(),
+            (document.getElementById("music-text").innerText =
+              "Notre Chanson"));
       }
     </script>
   </body>
