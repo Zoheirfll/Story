@@ -2,38 +2,51 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Pour Toi ❤️</title>
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&family=Courier+Prime&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;800&family=Courier+Prime&family=Orbitron:wght@500&display=swap"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
       :root {
-        --primary: #e84393;
-        --secondary: #a29bfe;
-        --bg: #ffeaa7;
-        --card-bg: #ffffff;
+        --primary: #ff007f;
+        --secondary: #70a1ff;
+        --glass: rgba(255, 255, 255, 0.9);
+        --bg-gradient: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
         --text: #2d3436;
       }
 
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
       body {
         margin: 0;
         font-family: "Montserrat", sans-serif;
-        background-color: var(--bg);
+        background: var(--bg-gradient);
         color: var(--text);
         overflow-x: hidden;
+        min-height: 100vh;
+        padding-bottom: 50px;
       }
 
-      /* CANVAS PLUIE DE COEURS */
+      /* CANVAS BACKGROUND */
       #heart-canvas {
         position: fixed;
         top: 0;
@@ -41,152 +54,165 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        pointer-events: none;
+      }
+
+      /* CARDS */
+      .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 90%;
+        width: 600px;
       }
 
       /* HEADER */
       header {
-        height: 100vh;
+        height: 90vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-          url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 20px;
       }
-
       h1 {
         font-family: "Dancing Script", cursive;
         font-size: 4rem;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        animation: float 3s ease-in-out infinite;
-      }
-      @keyframes float {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
-
-      .counter-box {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px 40px;
-        border-radius: 50px;
         color: var(--primary);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        margin-top: 20px;
-        font-weight: bold;
-      }
-      .days-count {
-        font-size: 2.5rem;
-        display: block;
+        text-shadow: 2px 2px 0px white;
+        margin: 0;
+        animation: bounceInDown 1.5s;
       }
 
-      .music-player {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 10px 15px;
-        border-radius: 50px;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 0.9rem;
-        font-weight: bold;
-      }
-
-      .timeline {
+      /* TIMELINE */
+      .timeline-item {
+        border-left: 3px solid var(--primary);
+        padding-left: 20px;
+        margin: 30px 0;
         position: relative;
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
       }
-      .timeline::after {
-        content: "";
-        position: absolute;
-        width: 4px;
-        background-color: var(--primary);
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        margin-left: -2px;
-        border-radius: 2px;
-      }
-      .container {
-        padding: 10px 40px;
-        position: relative;
-        width: 50%;
-        box-sizing: border-box;
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.8s ease-out;
-      }
-      .container.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .left {
-        left: 0;
-      }
-      .right {
-        left: 50%;
-      }
-      .container::after {
+      .timeline-item::before {
         content: "❤️";
         position: absolute;
-        width: 25px;
-        height: 25px;
-        right: -17px;
-        background-color: var(--bg);
-        border: 4px solid var(--primary);
-        top: 15px;
-        border-radius: 50%;
-        z-index: 1;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        left: -14px;
+        top: 0;
+        background: transparent;
       }
-      .right::after {
-        left: -16px;
-      }
-      .content {
-        padding: 20px;
-        background-color: var(--card-bg);
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-      .content img {
+      .timeline-img {
         width: 100%;
         border-radius: 10px;
         margin-top: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       }
 
-      .letter-section {
-        max-width: 700px;
-        margin: 80px auto;
-        padding: 40px;
-        background: #fff;
-        border-radius: 5px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        font-family: "Courier Prime", monospace;
-        line-height: 1.6;
+      /* MAP */
+      #map {
+        height: 300px;
+        width: 100%;
+        border-radius: 15px;
+        margin-top: 20px;
+        border: 4px solid white;
+      }
+
+      /* COFFRE FORT (VAULT) */
+      #vault-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      }
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .key {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: 0.1s;
+      }
+      .key:active {
+        background: var(--primary);
+        color: white;
+        transform: scale(0.9);
+      }
+      #pin-display {
+        background: white;
+        width: 180px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        letter-spacing: 5px;
+        border: 2px solid var(--primary);
+      }
+
+      /* LOCKED CONTENT */
+      #locked-content {
+        display: none;
+        opacity: 0;
+        transition: opacity 1s;
+      }
+      #locked-content.visible {
+        display: block;
+        opacity: 1;
+      }
+
+      /* AI SCANNER */
+      .scanner-circle {
+        width: 100px;
+        height: 100px;
+        border: 4px solid var(--primary);
+        border-radius: 50%;
+        margin: 20px auto;
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 15px var(--primary);
+      }
+      .scanner-line {
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        position: absolute;
+        animation: scan 1.5s infinite ease-in-out;
+        box-shadow: 0 0 10px var(--primary);
+      }
+      @keyframes scan {
+        0% {
+          top: 0;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+
+      /* TYPEWRITER LETTER */
+      .letter-section {
+        font-family: "Courier Prime", monospace;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
         transform: rotate(-1deg);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        margin: 30px auto;
       }
       .letter-section::before {
         content: "";
@@ -203,45 +229,82 @@
           #fff 20px
         );
       }
-      #typewriter {
-        font-size: 1.1rem;
-        color: #333;
-        min-height: 150px;
-      }
       .cursor {
         display: inline-block;
         width: 2px;
         height: 1.2em;
         background-color: black;
         animation: blink 1s infinite;
-        vertical-align: bottom;
       }
       @keyframes blink {
-        0%,
-        100% {
-          opacity: 1;
-        }
         50% {
           opacity: 0;
         }
       }
 
+      /* CHAT SIMULATOR */
+      .chat-container {
+        background: #fff;
+        border-radius: 20px;
+        padding: 15px;
+        height: 250px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: 1px solid #eee;
+      }
+      .msg {
+        padding: 8px 12px;
+        border-radius: 15px;
+        max-width: 80%;
+        font-size: 0.9rem;
+        animation: fadeIn 0.5s forwards;
+      }
+      .msg-him {
+        background: #dcf8c6;
+        align-self: flex-end;
+      }
+      .msg-her {
+        background: #f1f0f0;
+        align-self: flex-start;
+      }
+      .typing {
+        font-size: 0.8rem;
+        color: #888;
+        font-style: italic;
+        display: none;
+        text-align: right;
+      }
+
+      /* GAME TRIGGER BTN */
       .game-trigger {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
         background: var(--primary);
         color: white;
-        padding: 15px 25px;
-        border-radius: 50px;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-        font-weight: bold;
-        animation: pulse 2s infinite;
         border: none;
-        font-size: 1.1rem;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: block;
+        margin: 30px auto;
+        animation: pulse 2s infinite;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* MODAL GAME */
       .game-modal {
         display: none;
         position: fixed;
@@ -264,48 +327,6 @@
         text-align: center;
         position: relative;
       }
-
-      /* --- CORRECTION CSS ICI --- */
-      #scratch-container {
-        position: relative;
-        width: 300px;
-        height: 150px;
-        margin: 20px auto;
-        /* J'ai enlevé le display: none; qui bloquait tout */
-        user-select: none;
-      }
-      #scratch-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        cursor: crosshair;
-        touch-action: none;
-        border-radius: 10px;
-      }
-      #secret-prize {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #81ecec, #74b9ff);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: "Dancing Script", cursive;
-        font-size: 1.8rem;
-        color: white;
-        border-radius: 10px;
-        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
-
-      #map {
-        height: 350px;
-        width: 100%;
-        max-width: 800px;
-        margin: 40px auto;
-        border-radius: 20px;
-        border: 4px solid white;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      }
       .btn-answer {
         width: 100%;
         padding: 15px;
@@ -316,39 +337,66 @@
         font-weight: 600;
         cursor: pointer;
       }
-      .btn-answer:hover {
-        background: var(--primary);
-        color: white;
-      }
       .close-game {
         position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 28px;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
         cursor: pointer;
       }
 
-      @media screen and (max-width: 600px) {
-        h1 {
-          font-size: 2.8rem;
-        }
-        .container {
-          width: 100%;
-          padding-left: 70px;
-          padding-right: 20px;
-        }
-        .container::after {
-          left: 15px;
-        }
-        .left::after,
-        .right::after {
-          left: 15px;
-        }
-        .right {
-          left: 0%;
-        }
-        .timeline::after {
-          left: 31px;
+      /* SCRATCH CARD */
+      #scratch-container {
+        position: relative;
+        width: 300px;
+        height: 150px;
+        margin: 20px auto;
+        user-select: none;
+        display: none;
+      }
+      #scratch-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 10px;
+        cursor: crosshair;
+      }
+      #secret-prize {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #81ecec, #74b9ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Dancing Script";
+        font-size: 2rem;
+        color: white;
+        border-radius: 10px;
+      }
+
+      /* MUSIC */
+      .music-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        cursor: pointer;
+        border: 2px solid var(--primary);
+      }
+      .music-anim {
+        animation: spin 4s linear infinite;
+      }
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
         }
       }
     </style>
@@ -356,77 +404,113 @@
   <body>
     <canvas id="heart-canvas"></canvas>
 
-    <div class="music-player" onclick="toggleMusic()">
-      <span style="font-size: 1.2rem; margin-right: 8px">🎵</span>
-      <span id="music-text">Notre Chanson</span>
-      <audio id="bg-music" loop>
-        <source
-          src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-          type="audio/mpeg"
-        />
-      </audio>
-    </div>
+    <div class="music-btn" onclick="toggleMusic()" id="music-icon">🎵</div>
+    <audio id="bg-music" loop>
+      <source src="music.mp3" type="audio/mpeg" />
+    </audio>
 
     <header>
-      <h1>Toi & Moi</h1>
-      <p style="font-size: 1.2rem; margin-top: 0">Le début de l'éternité</p>
-      <div class="counter-box">
-        <span id="days" class="days-count">0</span>
-        jours ensemble
+      <div class="glass-card">
+        <p style="letter-spacing: 2px; font-size: 0.8rem">MISSION: VALENTINE</p>
+        <h1>Toi & Moi</h1>
+        <p
+          id="counter"
+          style="font-weight: bold; color: var(--primary); margin-top: 15px"
+        >
+          Chargement...
+        </p>
+      </div>
+      <div
+        class="animate__animated animate__bounce animate__infinite"
+        style="margin-top: 20px"
+      >
+        ⬇️
       </div>
     </header>
 
-    <div style="text-align: center; padding: 20px">
-      <h2
-        style="
-          color: var(--primary);
-          font-family: 'Dancing Script', cursive;
-          font-size: 2.5rem;
-        "
-      >
-        Nos Lieux
-      </h2>
+    <div class="glass-card">
+      <h2 style="color: var(--primary); text-align: center">Notre Histoire</h2>
+      <div class="timeline-item">
+        <strong>14 Février 2024</strong><br /><span>Le Big Bang 💥</span>
+        <img
+          src="images/screencapture-pastel-diplomatie-gouv-fr-etudesenfrance-dyn-protected-etudiant-ET-PAN-initDossierFormations-html-2026-01-23-12_26_47.png"
+          class="timeline-img"
+        />
+      </div>
+      <div class="timeline-item">
+        <strong>Avril 2024</strong><br /><span>Oran ❤️</span>
+        <img
+          src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+          class="timeline-img"
+        />
+      </div>
       <div id="map"></div>
     </div>
 
-    <div class="timeline">
-      <div class="container left">
-        <div class="content">
-          <span style="color: var(--primary); font-weight: bold"
-            >14 Février 2024</span
-          >
-          <h2>Le Premier Jour</h2>
-          <p>Je ne savais pas encore que ma vie allait changer.</p>
-          <img
-            src="images/screencapture-pastel-diplomatie-gouv-fr-etudesenfrance-dyn-protected-etudiant-ET-PAN-initDossierFormations-html-2026-01-23-12_26_47.png"
-            alt="Rencontre"
-          />
+    <div id="vault-section" class="glass-card">
+      <h2>🔒 Zone Protégée</h2>
+      <p>Entrez la date de notre rencontre (JJMM)</p>
+      <div id="pin-display">****</div>
+      <div class="keypad">
+        <div class="key" onclick="enterPin(1)">1</div>
+        <div class="key" onclick="enterPin(2)">2</div>
+        <div class="key" onclick="enterPin(3)">3</div>
+        <div class="key" onclick="enterPin(4)">4</div>
+        <div class="key" onclick="enterPin(5)">5</div>
+        <div class="key" onclick="enterPin(6)">6</div>
+        <div class="key" onclick="enterPin(7)">7</div>
+        <div class="key" onclick="enterPin(8)">8</div>
+        <div class="key" onclick="enterPin(9)">9</div>
+        <div class="key" onclick="clearPin()">C</div>
+        <div class="key" onclick="enterPin(0)">0</div>
+        <div
+          class="key"
+          style="background: var(--primary); color: white"
+          onclick="checkPin()"
+        >
+          OK
         </div>
       </div>
-      <div class="container right">
-        <div class="content">
-          <span style="color: var(--primary); font-weight: bold"
-            >Avril 2024</span
-          >
-          <h2>Oran la Radieuse</h2>
-          <p>Nos fous rires, la mer, et toi.</p>
-          <img
-            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-            alt="Voyage"
-          />
+      <p id="error-msg" style="color: red; display: none; margin-top: 10px">
+        Accès Refusé ! 🚫
+      </p>
+    </div>
+
+    <div id="locked-content">
+      <div class="glass-card" style="text-align: center">
+        <div class="scanner-circle">
+          <div style="font-size: 2rem">❤️</div>
+          <div class="scanner-line"></div>
         </div>
+        <p
+          id="ai-status"
+          style="
+            font-family: 'Orbitron';
+            color: var(--primary);
+            margin-top: 10px;
+          "
+        >
+          Analyse...
+        </p>
       </div>
-    </div>
 
-    <div class="letter-section">
-      <div id="typewriter"></div>
-      <span class="cursor"></span>
-    </div>
-    <div style="height: 100px"></div>
+      <div class="glass-card letter-section">
+        <div id="typewriter"></div>
+        <span class="cursor"></span>
+      </div>
 
-    <button class="game-trigger" onclick="openGame()">
-      🎁 Ouvre ton cadeau
-    </button>
+      <div class="glass-card">
+        <h3 style="text-align: center; margin-top: 0">
+          💬 Nos conversations...
+        </h3>
+        <div class="chat-container" id="chat-box"></div>
+        <div class="typing" id="typing-indicator">Zoheir écrit...</div>
+      </div>
+
+      <button class="game-trigger" onclick="openGame()">
+        🎁 LANCER LA MISSION FINALE
+      </button>
+    </div>
 
     <div id="gameModal" class="game-modal">
       <div class="game-content">
@@ -437,16 +521,15 @@
           <div id="answers-area"></div>
           <p
             id="feedback"
-            style="font-weight: bold; margin-top: 10px; min-height: 20px"
+            style="font-weight: bold; margin-top: 15px; height: 20px"
           ></p>
         </div>
 
         <div id="scratch-section" style="display: none">
           <h2 style="color: var(--primary); font-family: 'Dancing Script'">
-            Bravo ! 🎉
+            C'est gagné ! 🎉
           </h2>
-          <p>Gratte la carte ci-dessous pour découvrir ton cadeau :</p>
-
+          <p>Gratte pour découvrir ton cadeau :</p>
           <div id="scratch-container">
             <div id="secret-prize">Bon pour un Massage ❤️</div>
             <canvas id="scratch-canvas" width="300" height="150"></canvas>
@@ -456,211 +539,246 @@
     </div>
 
     <script>
-      const startDate = new Date("2024-02-14");
-      const letterText =
-        "Ma chérie,\n\nDepuis que tu es entrée dans ma vie, tout a pris des couleurs que je ne connaissais pas. \nChaque jour passé avec toi est un cadeau. \n\nJe t'ai fait ce petit site pour te rappeler à quel point tu es unique.\n\nJe t'aime.\n\n- Ton Zoheir";
-
-      const diff = new Date() - startDate;
-      document.getElementById("days").innerText = Math.floor(
-        diff / (1000 * 60 * 60 * 24)
-      );
-
-      var map = L.map("map").setView([35.697654, -0.633737], 13);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap",
-      }).addTo(map);
-      L.marker([35.697654, -0.633737])
-        .addTo(map)
-        .bindPopup("💖 Oran")
-        .openPopup();
-
-      const typeWriterElement = document.getElementById("typewriter");
-      let i = 0;
-      function typeWriter() {
-        if (i < letterText.length) {
-          const char = letterText.charAt(i);
-          typeWriterElement.innerHTML += char === "\n" ? "<br>" : char;
-          i++;
-          setTimeout(typeWriter, 50);
-        }
-      }
-      const letterObserver = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && i === 0) typeWriter();
-        },
-        { threshold: 0.5 }
-      );
-      letterObserver.observe(document.querySelector(".letter-section"));
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          });
-        },
-        { threshold: 0.1 }
-      );
-      document
-        .querySelectorAll(".container")
-        .forEach((el) => observer.observe(el));
-
-      const questions = [
+      /* --- CONFIG --- */
+      const START_DATE = new Date("2024-02-14");
+      const SECRET_CODE = "1402";
+      const LETTER_TEXT =
+        "Ma chérie,\n\nBravo, tu as craqué le code !\nJe voulais juste te dire à quel point tu comptes pour moi.\nChaque moment avec toi est un trésor.\n\nPrête pour le dernier défi ?\n\n- Ton Zoheir";
+      const CHAT_MSGS = [
+        { s: "him", t: "Tu fais quoi ? ❤️", d: 500 },
+        { s: "her", t: "Je pense à toi...", d: 2000 },
+        { s: "him", t: "Moooh c'est mignon 🥰", d: 3500 },
+        { s: "him", t: "J'ai une surprise pour toi !", d: 5000 },
+      ];
+      const QUIZ = [
         {
-          text: "Notre premier resto ?",
-          answers: [
-            { text: "Pizzeria", correct: false },
-            { text: "Sushi", correct: false },
-            { text: "Ce truc bizarre à Oran", correct: true },
+          t: "Notre premier resto ?",
+          a: [
+            { t: "Sushi", c: false },
+            { t: "Pizza", c: false },
+            { t: "Oran Bouffe", c: true },
           ],
-          wrong: "Menteuse ! 😂",
+          w: "Tu as oublié ?! 😱",
         },
         {
-          text: "Qui t'aime le plus ?",
-          isTroll: true,
-          answers: [
-            { text: "Zoheir ❤️", correct: true },
-            { text: "Brad Pitt", correct: false },
+          t: "Qui a toujours raison ?",
+          troll: true,
+          a: [
+            { t: "Toi ❤️", c: true },
+            { t: "Le voisin", c: false },
           ],
         },
       ];
-      let currentQ = 0;
 
+      /* --- 1. COUNTER & MAP --- */
+      document.getElementById("counter").innerText =
+        Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24)) +
+        " Jours";
+
+      var map = L.map("map").setView([35.697654, -0.633737], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+        map
+      );
+      L.marker([35.697654, -0.633737])
+        .addTo(map)
+        .bindPopup("<b>Oran</b><br>Notre QG ❤️");
+
+      /* --- 2. VAULT --- */
+      let pin = "";
+      const disp = document.getElementById("pin-display");
+      function enterPin(n) {
+        if (pin.length < 4) {
+          pin += n;
+          disp.innerText = pin.padEnd(4, "*");
+        }
+      }
+      function clearPin() {
+        pin = "";
+        disp.innerText = "****";
+      }
+      function checkPin() {
+        if (pin === SECRET_CODE) {
+          confetti();
+          document.getElementById("vault-section").style.display = "none";
+          const locked = document.getElementById("locked-content");
+          locked.classList.add("visible");
+          runUnlockSequence();
+        } else {
+          document.getElementById("error-msg").style.display = "block";
+          setTimeout(
+            () => (document.getElementById("error-msg").style.display = "none"),
+            2000
+          );
+          clearPin();
+        }
+      }
+
+      /* --- 3. UNLOCK SEQUENCE --- */
+      function runUnlockSequence() {
+        // AI
+        const st = document.getElementById("ai-status");
+        setTimeout(() => (st.innerText = "Scan Rétinien..."), 1000);
+        setTimeout(() => (st.innerText = "Accès Autorisé ✅"), 2500);
+
+        // Letter
+        setTimeout(typeWriter, 3000);
+
+        // Chat
+        setTimeout(startChat, 4000);
+      }
+
+      /* --- TYPEWRITER --- */
+      let ti = 0;
+      const tw = document.getElementById("typewriter");
+      function typeWriter() {
+        if (ti < LETTER_TEXT.length) {
+          tw.innerHTML +=
+            LETTER_TEXT.charAt(ti) === "\n" ? "<br>" : LETTER_TEXT.charAt(ti);
+          ti++;
+          setTimeout(typeWriter, 40);
+        }
+      }
+
+      /* --- CHAT --- */
+      function startChat() {
+        const box = document.getElementById("chat-box");
+        const typ = document.getElementById("typing-indicator");
+        CHAT_MSGS.forEach((m) => {
+          setTimeout(() => {
+            if (m.s === "him") typ.style.display = "block";
+            setTimeout(() => {
+              typ.style.display = "none";
+              const d = document.createElement("div");
+              d.className = `msg msg-${m.s}`;
+              d.innerText = m.t;
+              box.appendChild(d);
+              box.scrollTop = box.scrollHeight;
+            }, 1000);
+          }, m.d);
+        });
+      }
+
+      /* --- 4. QUIZ GAME --- */
+      let qIdx = 0;
       function openGame() {
         document.getElementById("gameModal").style.display = "flex";
-        loadQuestion();
+        loadQ();
       }
       function closeGame() {
         document.getElementById("gameModal").style.display = "none";
       }
 
-      function loadQuestion() {
-        if (currentQ >= questions.length) {
-          showScratchCard();
+      function loadQ() {
+        if (qIdx >= QUIZ.length) {
+          showScratch();
           return;
         }
-        const q = questions[currentQ];
-        document.getElementById("question-text").innerText = q.text;
-        const div = document.getElementById("answers-area");
-        div.innerHTML = "";
+        const q = QUIZ[qIdx];
+        document.getElementById("question-text").innerText = q.t;
+        const area = document.getElementById("answers-area");
+        area.innerHTML = "";
         document.getElementById("feedback").innerText = "";
 
-        q.answers.forEach((ans) => {
-          const btn = document.createElement("button");
-          btn.innerText = ans.text;
-          btn.classList.add("btn-answer");
-          if (q.isTroll && !ans.correct) {
-            btn.onmouseover = function () {
-              btn.style.position = "fixed";
-              btn.style.left = Math.random() * 80 + "%";
-              btn.style.top = Math.random() * 80 + "%";
+        q.a.forEach((ans) => {
+          const b = document.createElement("button");
+          b.className = "btn-answer";
+          b.innerText = ans.t;
+          if (q.troll && !ans.c) {
+            b.onmouseover = () => {
+              b.style.position = "fixed";
+              b.style.left = Math.random() * 80 + "%";
+              b.style.top = Math.random() * 80 + "%";
             };
-            btn.ontouchstart = btn.onmouseover;
+            b.ontouchstart = b.onmouseover;
           }
-          btn.onclick = () => {
-            if (ans.correct) {
-              document.getElementById("feedback").innerText = "Correct ! ❤️";
+          b.onclick = () => {
+            if (ans.c) {
+              document.getElementById("feedback").innerText = "Bravo !";
               document.getElementById("feedback").style.color = "green";
-              currentQ++;
-              setTimeout(loadQuestion, 800);
+              qIdx++;
+              setTimeout(loadQ, 800);
             } else {
-              document.getElementById("feedback").innerText =
-                q.wrong || "Faux !";
+              document.getElementById("feedback").innerText = q.w;
               document.getElementById("feedback").style.color = "red";
             }
           };
-          div.appendChild(btn);
+          area.appendChild(b);
         });
       }
 
-      function showScratchCard() {
+      /* --- 5. SCRATCH CARD --- */
+      function showScratch() {
         document.getElementById("quiz-section").style.display = "none";
         document.getElementById("scratch-section").style.display = "block";
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        // On s'assure que le conteneur est visible avant d'initier le canvas
         document.getElementById("scratch-container").style.display = "block";
-        initScratchCard();
+        initScratch();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
 
-      function initScratchCard() {
-        const canvas = document.getElementById("scratch-canvas");
-        const ctx = canvas.getContext("2d");
-
+      function initScratch() {
+        const c = document.getElementById("scratch-canvas");
+        const ctx = c.getContext("2d");
         ctx.fillStyle = "#b2bec3";
         ctx.fillRect(0, 0, 300, 150);
-
         ctx.fillStyle = "#636e72";
         ctx.font = "20px Montserrat";
-        ctx.fillText("✨ Grattez ici ✨", 85, 80);
+        ctx.fillText("Grattez moi ✨", 85, 80);
 
-        let isDrawing = false;
-
-        function getMousePos(canvas, evt) {
-          var rect = canvas.getBoundingClientRect();
-          var clientX = evt.clientX;
-          var clientY = evt.clientY;
-
-          // Support Mobile (Touch)
-          if (evt.touches && evt.touches.length > 0) {
-            clientX = evt.touches[0].clientX;
-            clientY = evt.touches[0].clientY;
-          }
-
-          return {
-            x: clientX - rect.left,
-            y: clientY - rect.top,
-          };
+        let draw = false;
+        function getPos(e) {
+          var r = c.getBoundingClientRect();
+          var x = (e.clientX || e.touches[0].clientX) - r.left;
+          var y = (e.clientY || e.touches[0].clientY) - r.top;
+          return { x, y };
         }
-
         function scratch(e) {
-          if (!isDrawing) return;
+          if (!draw) return;
           e.preventDefault();
-          const pos = getMousePos(canvas, e);
+          const p = getPos(e);
           ctx.globalCompositeOperation = "destination-out";
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
           ctx.fill();
         }
-
-        canvas.addEventListener("mousedown", () => (isDrawing = true));
-        canvas.addEventListener("touchstart", () => (isDrawing = true));
-        canvas.addEventListener("mouseup", () => (isDrawing = false));
-        canvas.addEventListener("touchend", () => (isDrawing = false));
-        canvas.addEventListener("mousemove", scratch);
-        canvas.addEventListener("touchmove", scratch);
+        c.addEventListener("mousedown", () => (draw = true));
+        c.addEventListener("touchstart", () => (draw = true));
+        c.addEventListener("mouseup", () => (draw = false));
+        c.addEventListener("touchend", () => (draw = false));
+        c.addEventListener("mousemove", scratch);
+        c.addEventListener("touchmove", scratch);
       }
 
-      const canvas = document.getElementById("heart-canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      /* --- EXTRAS --- */
+      const hc = document.getElementById("heart-canvas");
+      const hctx = hc.getContext("2d");
+      hc.width = window.innerWidth;
+      hc.height = window.innerHeight;
       let hearts = [];
       for (let i = 0; i < 30; i++)
         hearts.push({
-          x: Math.random() * canvas.width,
-          y: canvas.height + Math.random() * 100,
+          x: Math.random() * hc.width,
+          y: Math.random() * hc.height,
           s: Math.random() * 20 + 10,
           sp: Math.random() * 2 + 1,
         });
-      function drawHearts() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function drawH() {
+        hctx.clearRect(0, 0, hc.width, hc.height);
         hearts.forEach((h) => {
-          ctx.fillText("❤️", h.x, h.y);
+          hctx.font = h.s + "px serif";
+          hctx.fillText("❤️", h.x, h.y);
           h.y -= h.sp;
-          if (h.y < -50) h.y = canvas.height + 10;
+          if (h.y < -50) h.y = hc.height;
         });
-        requestAnimationFrame(drawHearts);
+        requestAnimationFrame(drawH);
       }
-      ctx.font = "20px Arial";
-      drawHearts();
+      drawH();
 
       function toggleMusic() {
-        const audio = document.getElementById("bg-music");
-        audio.paused
-          ? (audio.play(),
-            (document.getElementById("music-text").innerText = "En pause"))
-          : (audio.pause(),
-            (document.getElementById("music-text").innerText =
-              "Notre Chanson"));
+        const a = document.getElementById("bg-music");
+        const b = document.getElementById("music-icon");
+        a.paused
+          ? (a.play(), b.classList.add("music-anim"))
+          : (a.pause(), b.classList.remove("music-anim"));
       }
     </script>
   </body>
