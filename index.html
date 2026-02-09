@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
@@ -466,7 +466,7 @@
     <div class="glass-card">
       <h2 style="color: var(--primary); text-align: center">Notre Histoire</h2>
       <div class="timeline-item">
-        <strong>14 Février 2024</strong><br /><span>Le Big Bang 💥</span>
+        <strong>09 Avril 2025</strong><br /><span>Our first Date 💥</span>
         <img
           src="images/screencapture-pastel-diplomatie-gouv-fr-etudesenfrance-dyn-protected-etudiant-ET-PAN-initDossierFormations-html-2026-01-23-12_26_47.png"
           class="timeline-img"
@@ -520,7 +520,7 @@
         <p
           id="ai-status"
           style="
-            font-family: 'Orbitron';
+            font-family: &quot;Orbitron&quot;;
             color: var(--primary);
             margin-top: 10px;
           "
@@ -585,7 +585,12 @@
           ></p>
         </div>
         <div id="scratch-section" style="display: none">
-          <h2 style="color: var(--primary); font-family: 'Dancing Script'">
+          <h2
+            style="
+              color: var(--primary);
+              font-family: &quot;Dancing Script&quot;;
+            "
+          >
             C'est gagné ! 🎉
           </h2>
           <p>Gratte pour découvrir ton cadeau :</p>
@@ -599,8 +604,8 @@
 
     <script>
       /* --- CONFIG --- */
-      const START_DATE = new Date("2024-02-14");
-      const SECRET_CODE = "1402";
+      const START_DATE = new Date("2025-03-01");
+      const SECRET_CODE = "2306";
       const LETTER_TEXT =
         "Ma chérie,\n\nBravo, tu as craqué le code !\nJe voulais juste te dire à quel point tu comptes pour moi.\nChaque moment avec toi est un trésor.\n\nPrête pour le dernier défi ?\n\n- Ton Zoheir";
       const CHAT_MSGS = [
@@ -611,11 +616,11 @@
       ];
       const QUIZ = [
         {
-          t: "Notre premier resto ?",
+          t: "Notre premier date ?",
           a: [
-            { t: "Sushi", c: false },
-            { t: "Pizza", c: false },
-            { t: "Oran Bouffe", c: true },
+            { t: "Le mexicain", c: false },
+            { t: "Le voile bleu", c: false },
+            { t: "Le petit chalet", c: true },
           ],
           w: "Tu as oublié ?! 😱",
         },
@@ -624,7 +629,7 @@
           troll: true,
           a: [
             { t: "Toi ❤️", c: true },
-            { t: "Le voisin", c: false },
+            { t: "Moi", c: false },
           ],
         },
       ];
@@ -635,7 +640,7 @@
         " Jours";
       var map = L.map("map").setView([35.697654, -0.633737], 13);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-        map
+        map,
       );
       L.marker([35.697654, -0.633737])
         .addTo(map)
@@ -669,7 +674,7 @@
           document.getElementById("error-msg").style.display = "block";
           setTimeout(
             () => (document.getElementById("error-msg").style.display = "none"),
-            2000
+            2000,
           );
           clearPin();
         }
