@@ -30,104 +30,101 @@
 
     <style>
       :root {
-        --primary: #ff007f;
-        --secondary: #70a1ff;
-        --glass: rgba(255, 255, 255, 0.9);
-        --bg-gradient: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
-        --text: #2d3436;
-      }
+  --primary: #d6336c; /* Un rose plus élégant */
+  --secondary: #70a1ff;
+  --glass: rgba(255, 255, 255, 0.9);
+  --text: #000000; /* FORCE LE TEXTE EN NOIR PUR */
+}
 
       * {
         box-sizing: border-box;
         -webkit-tap-highlight-color: transparent;
       }
       body {
-        margin: 0;
-        font-family: "Montserrat", sans-serif;
-        background: var(--bg-gradient);
-        color: var(--text);
-        overflow-x: hidden;
-        min-height: 100vh;
-        padding-bottom: 50px;
-      }
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  /* Un dégradé "Sunset" beaucoup plus romantique et chaleureux */
+  background: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
 
       /* --- VALENTINE INTRO SCREEN --- */
       #intro-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          135deg,
-          #ff9a9e 0%,
-          #fecfef 99%,
-          #fecfef 100%
-        );
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-      }
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Fond dégradé radial doux (Rose pêche vers Rose pâle) */
+  background: radial-gradient(circle at center, #ff9a9e 0%, #fad0c4 100%);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
       .intro-title {
-        font-family: "Dancing Script", cursive;
-        font-size: 3.5rem;
-        color: #ff007f;
-        margin-bottom: 30px;
-        text-shadow: 2px 2px white;
-      }
+  font-family: "Dancing Script", cursive;
+  font-size: 3.5rem;
+  color: white; /* Titre en blanc */
+  margin-bottom: 30px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Ombre douce pour lisibilité */
+}
 
       .intro-gif {
-        max-width: 200px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      }
+  max-width: 200px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 4px solid white; /* Petit cadre blanc autour du GIF */
+}
 
       .btn-group {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 80px; /* Espace réservé */
-      }
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80px; 
+}
 
-      .btn-yes {
-        background: #27ae60;
-        color: white;
-        padding: 15px 40px;
-        font-size: 1.5rem;
-        border: none;
-        border-radius: 50px;
-        font-family: "Dancing Script";
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s;
-        z-index: 10;
-      }
-      .btn-yes:active {
-        transform: scale(0.95);
-      }
+/* Bouton YES : Blanc avec texte Rose */
+.btn-yes {
+  background: white;
+  color: #ff4757;
+  padding: 15px 45px;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; /* Texte gras */
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+  z-index: 10;
+}
+.btn-yes:active { transform: scale(0.95); }
 
-      /* CORRECTION DU BOUTON NO */
-      .btn-no {
-        background: #c0392b;
-        color: white;
-        padding: 15px 30px;
-        font-size: 1.2rem;
-        border: none;
-        border-radius: 50px;
-        font-family: "Montserrat";
-        cursor: pointer;
-        position: relative; /* On le laisse normal au début */
-        transition: 0.1s;
-        z-index: 10;
-      }
+/* Bouton NO : Transparent avec bordure blanche */
+.btn-no {
+  background: rgba(255,255,255,0.3);
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: 2px solid white;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative; 
+  transition: 0.1s;
+  z-index: 10;
+}
       /* ------------------------------------------ */
 
       #heart-canvas {
@@ -168,12 +165,32 @@
         animation: bounceInDown 1.5s;
       }
 
-      .timeline-item {
-        border-left: 3px solid var(--primary);
-        padding-left: 20px;
-        margin: 30px 0;
-        position: relative;
-      }
+  .timeline-item {
+  border-left: 4px solid #ff9a9e; /* Ligne plus jolie */
+  padding-left: 20px;
+  margin: 30px 0;
+  position: relative;
+}
+
+/* Titre de la date (ex: Mars 2025) */
+.timeline-item strong {
+    font-size: 1.3rem;
+    color: #d6336c; /* Rose foncé */
+    font-weight: 800;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Le texte de description (ex: The beginning of our history...) */
+.timeline-item span {
+    font-size: 1.05rem; /* Un peu plus grand */
+    line-height: 1.6;   /* Plus d'espace entre les lignes */
+    color: #000000;     /* NOIR ABSOLU */
+    font-weight: 600;   /* Demi-gras pour que ce soit bien lisible */
+    display: block;
+    margin-bottom: 15px;
+    font-family: "Montserrat", sans-serif;
+}
       .timeline-item::before {
         content: "❤️";
         position: absolute;
@@ -247,7 +264,26 @@
         margin-top: 20px;
         border: 4px solid white;
       }
+      .emoji-icon {
+  background: transparent !important;
+  border: none !important;
+  text-align: center;
+  font-size: 35px; /* Taille de l'emoji */
+  line-height: 35px;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); /* Petite ombre pour le relief */
+}
+/* --- STYLE DES MARQUEURS --- */
+.custom-marker {
+  font-size: 35px; /* Taille de l'emoji */
+  text-align: center;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); /* Ombre pour le relief */
+  animation: float 2s ease-in-out infinite; /* Animation de flottement */
+}
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); } /* Ça monte et descend */
+}
       #vault-section {
         display: flex;
         flex-direction: column;
@@ -594,12 +630,12 @@
 
     <div class="music-btn" onclick="toggleMusic()" id="music-icon">🎵</div>
     <audio id="bg-music" loop>
-      <source src="music.mp3" type="audio/mpeg" />
+      <source src="images/music.mp3" type="audio/mpeg" />
     </audio>
 
     <header>
       <div class="glass-card">
-        <p style="letter-spacing: 2px; font-size: 0.8rem">MISSION: VALENTINE</p>
+        <p style="letter-spacing: 2px; font-size: 0.8rem">HAPPY VALENTINE</p>
         <h1>You & Me</h1>
         <p
           id="counter"
@@ -618,6 +654,16 @@
 
     <div class="glass-card">
       <h2 style="color: var(--primary); text-align: center">Our Story</h2>
+<div class="timeline-item">
+        <strong>Mars 2025</strong><br /><span
+          >The beginning of our history, of our beautiful times, i'm so lucky and happy that i could meet you and be with you and to call you mine, thank u so much for choosing me, i loveee you my baby ❤️❤️❤️❤️❤️</span
+        >
+        <div class="photo-grid">
+          <img src="images/IMG_20250317_170907_466.jpg" onclick="zoomImage(this)" />
+          <img src="images/IMG_20250317_170912_614.jpg" onclick="zoomImage(this)" />
+          <img src="images/IMG_20250331_174059_808.jpg" onclick="zoomImage(this)" />
+        </div>
+      </div>
 
       <div class="timeline-item">
         <strong>09 Avril 2025</strong><br /><span
@@ -625,6 +671,9 @@
         >
         <div class="photo-grid">
           <img src="images/1er date.jpg" onclick="zoomImage(this)" />
+          <img src="images/1er date 13 .jpg" onclick="zoomImage(this)" />
+          <img src="images/1er date 13 2.jpg" onclick="zoomImage(this)" />
+          <img src="images/1st date 13.jpg" onclick="zoomImage(this)" />
         </div>
       </div>
 
@@ -674,6 +723,18 @@
           <img src="images/Anniversary.jpg" onclick="zoomImage(this)" />
           <img src="images/23 Juin.jpg" onclick="zoomImage(this)" />
           <img src="images/23 juin (2).jpg" onclick="zoomImage(this)" />
+          <img src="images/birthday 13.jpg" onclick="zoomImage(this)" />
+        </div>
+      </div>
+      <div class="timeline-item">
+        <strong>Juillet, Aout, Septembre</strong><br /><span
+          >A lotttt of beach Days, a lot, my favorite summer of all my life (yes you made me love the summer and the beach that i hated baby thanks to u love)</span
+        >
+        <div class="photo-grid">
+          <img src="images/d beach.jpg" onclick="zoomImage(this)" />
+          <img src="images/b.jpg" onclick="zoomImage(this)" />
+          <img src="images/b1.jpg" onclick="zoomImage(this)" />
+          <img src="images/b3.jpg" onclick="zoomImage(this)" />
         </div>
       </div>
       <div class="timeline-item">
@@ -721,8 +782,43 @@
         <div class="photo-grid">
           <img src="images/Mosta .jpg" onclick="zoomImage(this)" />
           <img src="images/Mosta.jpg" onclick="zoomImage(this)" />
+          <img src="images/mosta 13 (2).jpg" onclick="zoomImage(this)" />
+          <img src="images/Mosta 13.jpg" onclick="zoomImage(this)" />
         </div>
       </div>
+    <div class="timeline-item">
+      <strong>31 Décembre 2025</strong><br /><span
+        >Sushi day baby, it was so worth it love, i wanna go again babyyy</span
+      >
+      <div class="photo-grid">
+        <img
+          src="images/Screenshot_20260213_111549_Gallery.jpg"
+          onclick="zoomImage(this)"
+        />
+        <img
+          src="images/Screenshot_20260213_111555_Gallery.jpg"
+          onclick="zoomImage(this)"
+        />
+      </div>
+    </div>
+    <div class="timeline-item">
+      <strong>17 Janvier 2026</strong><br /><span
+        >Le coq, well i admit it was your choice and the best choice (You won for once hhhh)/span
+      >
+      <div class="photo-grid">
+        <img src="images/le coq.jpg" onclick="zoomImage(this)" />
+        <img src="images/le coqq.jpg" onclick="zoomImage(this)" />
+      </div>
+    </div>
+    <div class="timeline-item">
+      <strong>19 Janvier 2026 </strong><br /><span
+        >Seven burgers, the best burgers and pizza and ofc what made it more perfect was ur presence and ur smile and happiness</span
+      >
+      <div class="photo-grid">
+        <img src="images/7 brgs.jpg" onclick="zoomImage(this)" />
+        <img src="images/7brgrs.jpg" onclick="zoomImage(this)" />
+      </div>
+    </div>
       <div id="map"></div>
     </div>
 
@@ -754,14 +850,14 @@
         </div>
       </div>
       <p id="error-msg" style="color: red; display: none; margin-top: 10px">
-        Accès Refusé ! 🚫
+        Access Denied (You got it baby, i trust you )
       </p>
     </div>
 
     <div id="locked-content">
       <div class="glass-card">
         <h3 style="text-align: center; color: var(--primary)">
-          Nos instants volés (My choices hhh) 📸
+          Our stolen Moments (My choices hhh) and baby we have a lot of memories, this was just some of them, i'm so happy that i share all this with you and i will always do my loveee i loveeee  youuu so much   📸
         </h3>
         <div class="gallery">
           <div class="polaroid" onclick="zoomImage(this.querySelector('img'))">
@@ -772,7 +868,22 @@
           </div>
           <div class="polaroid" onclick="zoomImage(this.querySelector('img'))">
             <img
-              src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400"
+              src="images/d cute (2).jpg"
+            />
+          </div>
+          <div class="polaroid" onclick="zoomImage(this.querySelector('img'))">
+            <img
+              src="images/d cute.jpg"
+            />
+          </div>
+          <div class="polaroid" onclick="zoomImage(this.querySelector('img'))">
+            <img
+              src="images/d cutie.jpg"
+            />
+          </div>
+          <div class="polaroid" onclick="zoomImage(this.querySelector('img'))">
+            <img
+              src="images/divers cute.jpg"
             />
           </div>
         </div>
@@ -856,17 +967,28 @@
       }
 
       function acceptValentine() {
-        const overlay = document.getElementById("intro-screen");
-        overlay.style.transition = "opacity 1s";
-        overlay.style.opacity = "0";
-        setTimeout(() => {
-          overlay.style.display = "none";
-          // Start Music and Confetti
-          document.getElementById("bg-music").play();
-          confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        }, 1000);
-      }
+  const overlay = document.getElementById('intro-screen');
+  const music = document.getElementById("bg-music"); // On cible la musique
 
+  overlay.style.transition = "opacity 1s";
+  overlay.style.opacity = "0";
+
+  // Lancement de la musique
+  music.volume = 0.5; // (Optionnel) Met le volume à 50% pour ne pas l'assourdir
+  music.play().then(() => {
+      // La musique s'est lancée avec succès !
+      console.log("Musique lancée !");
+  }).catch(error => {
+      // Si jamais ça bloque (rare avec un clic), on affiche l'erreur
+      console.log("Erreur lecture audio : ", error);
+  });
+
+  // Animation des confettis et disparition de l'écran
+  setTimeout(() => {
+      overlay.style.display = 'none';
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+  }, 1000);
+}
       /* --- FONCTION ZOOM --- */
       function zoomImage(img) {
         const lb = document.getElementById("lightbox");
@@ -879,7 +1001,7 @@
       const START_DATE = new Date("2025-03-01");
       const SECRET_CODE = "2306";
       const LETTER_TEXT =
-        "My love,\n\nCongratulations, you just cracked the code (well ofc i'm obssessed by you, so it had to be your birthday)\nI just wanted to tell u how much u mean to me.\nEvery moment with you have been a treasure, i'm so happy to have you, i pray god every day for you to protect you from everything and protect your good heart and your sweet soul, i'm so much grateful and don't forget us it's 'always and forever'.\n\n Are you ready for the last challenge?\n\n- Your baby";
+        "My love,\n\nCongratulations, you just cracked the code (well ofc i'm obssessed by you, so it had to be your birthday)\nI just wanted to tell u how much u mean to me.\nEvery moment with you have been a treasure, i'm so happy to have you, i pray god every day for you to protect you from everything and protect your good heart and your sweet soul, i'm so much grateful and don't forget us it's ALWAYS AND FOREVER.\n\n Are you ready for the last challenge?\n\n- Your baby";
       const CHAT_MSGS = [
         { s: "him", t: "I love you baby ❤️", d: 500 },
         { s: "her", t: "I love you more", d: 2000 },
@@ -889,8 +1011,11 @@
           d: 3500,
         },
         { s: "her", t: "Okay, i admit you love me more", d: 5000 },
-        { s: "him", t: "Finally you admit (your baby)", d: 8000 },
+        { s: "him", t: "You admit it? pinky promise to me that it's true(your baby)", d: 8000 },
+        { s: "her", t: "I pinky promise", d: 10000 },
+        { s: "him", t: "Finally baby, finally, i'm so happy (your baby)", d: 12000 },
       ];
+      
       const QUIZ = [
         {
           t: "Our first Date ?",
@@ -917,7 +1042,7 @@
             { t: "Me (your baby)", c: true },
             { t: "you", c: false },
           ],
-          w: "Baby hh stop lying, you know the right answer ?! 😱",
+          w: "Baby hh stop lying, you know the right answer ?! ",
         },
         {
           t: "Qui a toujours raison ?",
@@ -929,36 +1054,48 @@
         },
       ];
 
-      /* --- 1. COUNTER & MAP --- */
-      document.getElementById("counter").innerText =
-        Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24)) + " Days";
-      var map = L.map("map").setView([35.697654, -0.633737], 10);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-        map,
-      );
-      L.marker([35.78116710709803, -0.5100626737269899])
-        .addTo(map)
-        .bindPopup("<b>Le petit Chalet</b><br>Our first date ❤️");
-      L.marker([35.74723059521888, -0.5716951332543354])
-        .addTo(map)
-        .bindPopup("<b>Le Voile Bleu</b><br>Our Second date ❤️");
-      L.marker([35.76143822752752, -0.7919056447105453])
-        .addTo(map)
-        .bindPopup("<b>Les dunes</b><br>Our favorite beach ");
-      L.marker([35.63811406733694, -0.5903183755875315])
-        .addTo(map)
-        .bindPopup(
-          "<b>Centre Commercial</b><br>Well it's where we met, fell in love, worked in, there was cinema, food, and a lot of memories ",
-        );
-      L.marker([35.719657141702825, -0.5997897486004726])
-        .addTo(map)
-        .bindPopup(
-          "<b>Steak House</b><br>The place where we did your anniversary(ofc i had to include it), it was so perfect, everything about that day was so damn perfect love ",
-        );
-      L.marker([35.73011331397365, -0.5861940620914038])
-        .addTo(map)
-        .bindPopup("<b>DISPACITO</b><br>The best cheesecake babyyyyyyyyy ");
+/* --- 1. COUNTER & MAP --- */
+document.getElementById("counter").innerText = Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24)) + " Days";
 
+/* Zoom à 11 pour tout voir */
+var map = L.map("map").setView([35.72, -0.63], 11);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+/* Fonction pour l'emoji centré */
+function createIcon(emoji) {
+  return L.divIcon({
+    className: 'emoji-icon',
+    html: `<div>${emoji}</div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20], // Centrage parfait
+    popupAnchor: [0, -20]
+  });
+}
+
+/* --- VOS LIEUX AVEC VOS TEXTES EXACTS --- */
+L.marker([35.781167, -0.510062], { icon: createIcon('💑') })
+  .addTo(map).bindPopup("<b>Le petit Chalet</b><br>Our first date ❤️");
+
+L.marker([35.747230, -0.571695], { icon: createIcon('❤️') })
+  .addTo(map).bindPopup("<b>Le Voile Bleu</b><br>Our Second date ❤️");
+
+L.marker([35.761438, -0.791905], { icon: createIcon('🏖️') })
+  .addTo(map).bindPopup("<b>Les dunes</b><br>Our favorite beach ");
+
+L.marker([35.638114, -0.590318], { icon: createIcon('🏬') })
+  .addTo(map).bindPopup("<b>Centre Commercial</b><br>Well it's where we met, fell in love, worked in, there was cinema, food, and a lot of memories ");
+
+L.marker([35.719657, -0.599789], { icon: createIcon('🎂') })
+  .addTo(map).bindPopup("<b>Steak House</b><br>The place where we did your anniversary(ofc i had to include it), it was so perfect, everything about that day was so damn perfect love ");
+
+L.marker([35.709746, -0.622051], { icon: createIcon('🍣') })
+  .addTo(map).bindPopup("<b>SAKURA SUSHI</b><br>The best sushiiiii ");
+
+L.marker([35.698185, -0.570431], { icon: createIcon('🥘') })
+  .addTo(map).bindPopup("<b>LE COQ</b><br>Your inspiration hhh ");
+
+L.marker([35.726311, -0.589767], { icon: createIcon('🍔') })
+  .addTo(map).bindPopup("<b>SEVEN BURGERS</b><br>The best burger babyyy ");
       /* --- 2. VAULT --- */
       let pin = "";
       const disp = document.getElementById("pin-display");
